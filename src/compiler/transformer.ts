@@ -105,10 +105,10 @@ namespace ts {
             hoistFunctionDeclaration,
             requestEmitHelper,
             readEmitHelpers,
-            onSubstituteNode: (_emitContext, node) => node,
+            onSubstituteNode: (_, node) => node,
             enableSubstitution,
             isSubstitutionEnabled,
-            onEmitNode: (node, emitContext, emitCallback) => emitCallback(node, emitContext),
+            onEmitNode: (hint, node, callback) => callback(hint, node),
             enableEmitNotification,
             isEmitNotificationEnabled
         };
@@ -159,21 +159,16 @@ namespace ts {
         /**
          * Emits a node with possible substitution.
          *
-         * @param emitContext The current emit context.
+         * @param hint A hint as to the intended usage of the node.
          * @param node The node to emit.
          * @param emitCallback The callback used to emit the node or its substitute.
          */
-        function emitNodeWithSubstitution(emitContext: EmitContext, node: Node, emitCallback: (emitContext: EmitContext, node: Node) => void) {
+        function emitNodeWithSubstitution(hint: EmitHint, node: Node, emitCallback: (hint: EmitHint, node: Node) => void) {
             if (node) {
                 if (isSubstitutionEnabled(node)) {
-                    const substitute = context.onSubstituteNode(emitContext, node);
-                    if (substitute && substitute !== node) {
-                        emitCallback(emitContext, substitute);
-                        return;
-                    }
+                    node = context.onSubstituteNode(hint, node) || node;
                 }
-
-                emitCallback(emitContext, node);
+                emitCallback(hint, node);
             }
         }
 
@@ -196,17 +191,17 @@ namespace ts {
         /**
          * Emits a node with possible emit notification.
          *
-         * @param emitContext The current emit context.
+         * @param hint A hint as to the intended usage of the node.
          * @param node The node to emit.
          * @param emitCallback The callback used to emit the node.
          */
-        function emitNodeWithNotification(emitContext: EmitContext, node: Node, emitCallback: (emitContext: EmitContext, node: Node) => void) {
+        function emitNodeWithNotification(hint: EmitHint, node: Node, emitCallback: (hint: EmitHint, node: Node) => void) {
             if (node) {
                 if (isEmitNotificationEnabled(node)) {
-                    context.onEmitNode(emitContext, node, emitCallback);
+                    context.onEmitNode(hint, node, emitCallback);
                 }
                 else {
-                    emitCallback(emitContext, node);
+                    emitCallback(hint, node);
                 }
             }
         }
