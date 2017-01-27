@@ -2,8 +2,8 @@
 
 ////f/*1*/oo = fo/*2*/o;
 
-////var [|bar|] = function () { };
-////[|bar|] = [|bar|] + 1;
+////var [|{| "isWriteAccess": true, "isDefinition": true |}bar|] = function () { };
+////[|{| "isWriteAccess": true |}bar|] = [|bar|] + 1;
 
 goTo.marker("1");
 verify.referencesAre([]);
@@ -11,4 +11,4 @@ verify.referencesAre([]);
 goTo.marker("2");
 verify.referencesAre([]);
 
-verify.rangesReferenceEachOther();
+verify.singleReferenceGroup("var bar: () => void");
