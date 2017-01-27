@@ -18,5 +18,5 @@ verify.referenceGroups([r0, r2, r3], [
     { definition: "(property) C.prop0: string", ranges: [r0] },
     { definition: "(property) D.prop0: string", ranges: [r2, r3] }
 ]);
-verify.referenceGroups(r1, [{ definition: "(property) C.prop1: number", ranges: [r1] }]);
+verify.singleReferenceGroup("(property) C.prop1: number", [r1]);
 verify.referencesOf(r4, []);

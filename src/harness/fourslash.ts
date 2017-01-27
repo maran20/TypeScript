@@ -906,8 +906,8 @@ namespace FourSlash {
             }
         }
 
-        public verifySingleReferenceGroup(definition: string) {
-            const ranges = this.getRanges();
+        public verifySingleReferenceGroup(definition: string, ranges?: Range[]) {
+            ranges = ranges || this.getRanges();
             this.verifyReferenceGroups(ranges, [{ definition, ranges }]);
         }
 
@@ -929,49 +929,7 @@ namespace FourSlash {
                 isWriteAccess = isWriteAccess || false; isDefinition = isDefinition || false;
                 return { fileName: r.fileName, textSpan: { start: r.start, length: r.end - r.start }, isWriteAccess, isDefinition }
             }
-
-            /*
-            if (refs.length !== parts.length) {
-                throw new Error(`Expected ${parts.length} reference groups, got ${refs.length}`);
-            }
-            ts.zipWith(refs, parts, (ref, part) => {
-                const def = ref.definition.displayParts.map(d => d.text).join("");
-                if (def !== part.definition) {
-                    throw new Error(`Expected reference group to be named ${part.definition}, got ${def}`);
-                }
-
-                if (ref.references.length !== part.ranges.length) {
-                    console.log(ref.references);
-                    throw new Error(`Expected ${part.ranges.length} references, got ${ref.references.length}`);
-                }
-
-                ts.zipWith(ref.references, part.ranges, (actual, expected) => {
-                    this.verifySingleReference(actual, expected);
-                });
-            });
-            */
         }
-
-        /*
-        private verifySingleReference(actual: ts.ReferenceEntry, expected: Range) {
-            let { isWriteAccess, isDefinition } = (expected.marker && expected.marker.data) || { isWriteAccess: false, isDefinition: false };
-            isWriteAccess = isWriteAccess || false; isDefinition = isDefinition || false;
-            //textSpanOfRange helper
-            const expectedReference: ts.ReferenceEntry = { fileName: expected.fileName, textSpan: { start: expected.start, length: expected.end - expected.start }, isWriteAccess, isDefinition };
-            //const actualJson = { fileName: actual.fileName, start: actual.textSpan.start, end: actual.textSpan.end, isWriteAccess: actual.isWriteAccess,
-            this.assertObjectsEqual(actual, expectedReference, `At ${this.getLineColStringAtPosition(expected.start)}: `);
-
-
-            /*if (actual.fileName !== expected.fileName || actual.textSpan.start !== expected.start || ts.textSpanEnd(actual.textSpan) !== expected.end) {
-                throw new Error(`Unexpected reference; expected ${expected}, got ${actual}`);
-            }
-            if (isWriteAccess !== actual.isWriteAccess) {
-                throw new Error(`Unexpected isWriteAccess: Expected ${isWriteAccess}, got ${actual.isWriteAccess}`);
-            }
-            if (isDefinition !== actual.isDefinition) {
-                throw new Error(`Unexpected isWriteAccess: Expected ${isDefinition}, got ${actual.isDefinition}`);
-            }* /
-        }*/
 
         private assertObjectsEqual<T>(fullActual: T, fullExpected: T, msgPrefix = ""): void {
             const recur = <U>(actual: U, expected: U, path: string) => {
@@ -3452,8 +3410,8 @@ namespace FourSlashInterface {
             this.state.verifyReferenceGroups(startRanges, parts);
         }
 
-        public singleReferenceGroup(definition: string) {
-            this.state.verifySingleReferenceGroup(definition);
+        public singleReferenceGroup(definition: string, ranges?: FourSlash.Range[]) {
+            this.state.verifySingleReferenceGroup(definition, ranges);
         }
 
         public rangesReferenceEachOther(ranges?: FourSlash.Range[]) {

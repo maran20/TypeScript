@@ -195,7 +195,7 @@ declare namespace FourSlashInterface {
          */
         referencesOf(start: Range, references: Range[]): void;
         referenceGroups(startRanges: Range | Range[], parts: Array<{ definition: string, ranges: Range[] }>): void;
-        singleReferenceGroup(definition: string): void;
+        singleReferenceGroup(definition: string, ranges?: Range[]): void;
         rangesAreOccurrences(isWriteAccess?: boolean): void;
         rangesAreRenameLocations(findInStrings?: boolean, findInComments?: boolean): void;
         /**

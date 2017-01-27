@@ -7,4 +7,9 @@
 ////     }
 //// }
 
-verify.rangesReferenceEachOther();
+const ranges = test.ranges();
+const [r0, r1, r2] = ranges;
+verify.referenceGroups(ranges, [
+    { definition: "(property) Foo.protectedParam: number", ranges: [r0, r2] },
+    { definition: "(parameter) protectedParam: number", ranges: [r1] }
+]);

@@ -15,4 +15,4 @@ verify.referenceGroups(r2, [
     { definition: "(method) class1.doStuff(): void", ranges: [r0] },
     { definition: "(method) class1.doStuff(): void", ranges: [r2] }
 ]);
-verify.referenceGroups([r1, r3], [{ definition: "(property) class1.propName: string", ranges: [r1, r3] }]);
+verify.singleReferenceGroup("(property) class1.propName: string", [r1, r3]);

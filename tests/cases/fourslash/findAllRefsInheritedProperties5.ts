@@ -14,7 +14,7 @@
 //// d.[|prop1|];  // r4
 
 const [r0, r1, r2, r3, r4] = test.ranges();
-verify.referenceGroups(r0, [{ definition: "(property) C.prop0: string", ranges: [r0] }]);
-verify.referenceGroups(r1, [{ definition: "(property) C.prop1: number", ranges: [r1] }]);
-verify.referenceGroups([r2, r3], [{ definition: "(property) D.prop0: string", ranges: [r2, r3] }]);
+verify.singleReferenceGroup("(property) C.prop0: string", [r0]);
+verify.singleReferenceGroup("(property) C.prop1: number", [r1]);
+verify.singleReferenceGroup("(property) D.prop0: string", [r2, r3]);
 verify.referencesOf(r4, []);
