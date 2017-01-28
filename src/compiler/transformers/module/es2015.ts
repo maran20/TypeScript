@@ -1,9 +1,19 @@
-/// <reference path="../../factory.ts" />
+﻿/// <reference path="../../factory.ts" />
 /// <reference path="../../visitor.ts" />
 
 /*@internal*/
 namespace ts {
     export function transformES2015Module(context: TransformationContext) {
+        const esModuleFlagHelper: EmitHelper = {
+            name: "typescript:esModuleFlag",
+            scoped: false,
+            priority: 0,
+            text: `
+                Object.defineProperty(exports, "__esModule", {
+                  value: true
+                });`
+        };
+
         const compilerOptions = context.getCompilerOptions();
         const previousOnEmitNode = context.onEmitNode;
         const previousOnSubstituteNode = context.onSubstituteNode;
@@ -21,6 +31,10 @@ namespace ts {
             }
 
             if (isExternalModule(node) || compilerOptions.isolatedModules) {
+                if (isExternalModule(node) && compilerOptions.module === ModuleKind.CommonJS && compilerOptions.target < ScriptTarget.ES2015) {
+                    context.requestEmitHelper(esModuleFlagHelper);
+                }
+ 
                 const externalHelpersModuleName = getOrCreateExternalHelpersModuleNameIfNeeded(node, compilerOptions);
                 if (externalHelpersModuleName) {
                     const statements: Statement[] = [];
